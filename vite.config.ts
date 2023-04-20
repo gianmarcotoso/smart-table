@@ -6,10 +6,8 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
 	build: {
 		lib: {
-			entry: 'src/lib/smart-table.component.tsx',
-			name: 'SmartTable',
-			fileName: 'smart-table',
-			formats: ['es', 'umd'],
+			entry: ['src/lib/smart-table.component.tsx', 'src/lib/smart-table-config.context.tsx'],
+			formats: ['es'],
 		},
 		rollupOptions: {
 			external: ['react', 'react-dom', 'ramda'],
