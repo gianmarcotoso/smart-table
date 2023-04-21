@@ -7,18 +7,18 @@ export default defineConfig({
 	build: {
 		lib: {
 			entry: ['src/lib/smart-table.component.tsx', 'src/lib/smart-table-config.context.tsx'],
+			fileName: `smart-table`,
 			formats: ['es'],
 		},
 		rollupOptions: {
 			external: ['react', 'react-dom', 'ramda'],
 			output: {
-				globals: {
-					react: 'React',
-					'react-dom': 'ReactDOM',
-					ramda: 'R',
-				},
+				sourcemapExcludeSources: true,
 			},
 		},
+		sourcemap: true,
+		target: 'esnext',
+		minify: false,
 	},
 	plugins: [dts(), react()],
 	server: {
