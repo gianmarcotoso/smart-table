@@ -65,16 +65,25 @@ export function TableHeader<T>({ column, sortProperties, onSort, config }: Table
 		)
 	}
 
+	const SortGlyphs = _config.table.sortGlyphs
+
+	const isSortable = !!column.getSortProperty
+	const isSortingActive = !!column.getSortProperty && isSortingSelected
+
 	return (
 		<TableComponents.TableHeader
 			key={column.key}
 			onClick={() => onSort(column.getSortProperty!)}
 			className={column.headerClassName}
+			issortable={isSortable}
 		>
 			{column.title}
-			{!!column.getSortProperty &&
-				isSortingSelected &&
-				(sortProperties.direction === SortDirection.Ascending ? <></> : <></>)}
+			{isSortingActive &&
+				(sortProperties.direction === SortDirection.Ascending ? (
+					<SortGlyphs.Ascending />
+				) : (
+					<SortGlyphs.Descending />
+				))}
 		</TableComponents.TableHeader>
 	)
 }

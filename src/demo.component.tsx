@@ -144,11 +144,18 @@ const config: DeepPartial<SmartTableConfig> = {
 	},
 }
 
+const SortProperties = {
+	id: (item: (typeof items)[number]) => item.id,
+	name: (item: (typeof items)[number]) => item.name,
+	age: (item: (typeof items)[number]) => item.age,
+}
+
 export function Demo() {
-	const columns: TableColumn<typeof items[number]>[] = [
+	const columns: TableColumn<(typeof items)[number]>[] = [
 		{
 			key: 'id',
 			title: 'ID',
+			getSortProperty: SortProperties.id,
 		},
 		{
 			key: 'name',
@@ -156,10 +163,12 @@ export function Demo() {
 			getValue: (item) => {
 				return <strong>{item.name}</strong>
 			},
+			getSortProperty: SortProperties.name,
 		},
 		{
 			key: 'age',
 			title: 'Age',
+			getSortProperty: SortProperties.age,
 		},
 		{
 			key: 'favoriteColor',

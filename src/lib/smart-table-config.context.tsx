@@ -21,6 +21,12 @@ export type SmartTableConfig = {
 		Paginator: ComponentType<any>
 		PaginatorItem: ComponentType<any>
 	}
+	table: {
+		sortGlyphs: {
+			Ascending: ComponentType<any>
+			Descending: ComponentType<any>
+		}
+	}
 	pagination: {
 		showPaginatorAboveTable: boolean
 		showPaginatorBelowTable: boolean
@@ -48,6 +54,12 @@ export const DefaultSmartTableConfig: SmartTableConfig = {
 		TableCell: 'td',
 		Paginator: Paginator,
 		PaginatorItem: PaginatorItem,
+	},
+	table: {
+		sortGlyphs: {
+			Ascending: () => <span>&#8593;</span>,
+			Descending: () => <span>&#8595;</span>,
+		},
 	},
 	pagination: {
 		showPaginatorAboveTable: false,
