@@ -38,6 +38,13 @@ export type PaginatorProps = {
 	pageCount: number
 	onSetActivePage: (number: number) => void
 	config?: DeepPartial<SmartTableConfig>
+	children?: React.ReactNode
+}
+
+export function DefaultPaginator({ children }: PaginatorProps) {
+	const _config = useConfig()
+
+	return <div className={_config.pagination.paginatorClassName}>{children}</div>
 }
 
 export function Paginator({ activePage, pageCount, onSetActivePage, config }: PaginatorProps) {
@@ -92,7 +99,7 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 	}
 
 	return (
-		<div className={_config.pagination.paginatorClassName}>
+		<Components.Paginator>
 			<Components.PaginatorItem data-page={0} onClick={handleSetActivePage}>
 				<Glyphs.FirstPage />
 			</Components.PaginatorItem>
@@ -134,6 +141,6 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 			<Components.PaginatorItem data-page={pageCount - 1} onClick={handleSetActivePage}>
 				<Glyphs.LastPage />
 			</Components.PaginatorItem>
-		</div>
+		</Components.Paginator>
 	)
 }

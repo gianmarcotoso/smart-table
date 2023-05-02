@@ -1,7 +1,7 @@
 import { ComponentType, createContext } from 'react'
 
 import { deepMerge } from './functions/deep-merge.fn'
-import { Paginator, PaginatorItem } from './paginator.component'
+import { DefaultPaginator, Paginator, PaginatorItem } from './paginator.component'
 
 type DeepPartialInner<T> = {
 	[P in keyof T]?: DeepPartial<T[P]>
@@ -54,7 +54,7 @@ export const DefaultSmartTableConfig: SmartTableConfig = {
 		TableHeader: 'th',
 		TableRow: 'tr',
 		TableCell: 'td',
-		Paginator: Paginator,
+		Paginator: DefaultPaginator,
 		PaginatorItem: PaginatorItem,
 	},
 	table: {
