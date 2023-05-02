@@ -15,12 +15,20 @@ export type SmartTableConfig = {
         Paginator: ComponentType<any>;
         PaginatorItem: ComponentType<any>;
     };
+    table: {
+        sortGlyphs: {
+            Ascending: ComponentType<any>;
+            Descending: ComponentType<any>;
+        };
+    };
     pagination: {
         showPaginatorAboveTable: boolean;
         showPaginatorBelowTable: boolean;
         maxPagesToShow: number;
         activePageItemClassName: string;
         useCustomPagination: boolean;
+        paginatorClassName: string;
+        paginatorItemClassName: string;
         glyphs: {
             FirstPage: ComponentType<any>;
             PreviousPage: ComponentType<any>;

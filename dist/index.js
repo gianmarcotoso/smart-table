@@ -1,4 +1,4 @@
-import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import { useMemo, useCallback, createContext, useContext, useState, useEffect } from 'react';
 import { uniq, concat, isNil, mergeWith, splitEvery, ascend, descend, sort, path, prop } from 'ramda';
 
@@ -12,8 +12,24 @@ function deepMerge(v1, v2) {
   }
 }
 
-function PaginatorItem({ active = false, activeClassName, onClick, children, ...rest }) {
-  return /* @__PURE__ */ jsx("div", { onClick, className: active ? activeClassName : "", ...rest, children });
+function PaginatorItem({
+  active = false,
+  activeClassName,
+  onClick,
+  children,
+  config,
+  ...rest
+}) {
+  const _config = useConfig(config);
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      onClick,
+      className: `${_config.pagination.paginatorItemClassName ?? ""} ${active ? activeClassName : ""}`,
+      ...rest,
+      children
+    }
+  );
 }
 function Paginator({ activePage, pageCount, onSetActivePage, config }) {
   const _config = useConfig(config);
@@ -51,7 +67,7 @@ function Paginator({ activePage, pageCount, onSetActivePage, config }) {
   if (pageCount < 2) {
     return null;
   }
-  return /* @__PURE__ */ jsxs(Components.Paginator, { children: [
+  return /* @__PURE__ */ jsxs("div", { className: _config.pagination.paginatorClassName, children: [
     /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": 0, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.FirstPage, {}) }),
     /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": activePage - 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.PreviousPage, {}) }),
     threshold + activePage >= _config.pagination.maxPagesToShow && /* @__PURE__ */ jsx(
@@ -100,12 +116,20 @@ const DefaultSmartTableConfig = {
     Paginator,
     PaginatorItem
   },
+  table: {
+    sortGlyphs: {
+      Ascending: () => /* @__PURE__ */ jsx("span", { children: "↑" }),
+      Descending: () => /* @__PURE__ */ jsx("span", { children: "↓" })
+    }
+  },
   pagination: {
     showPaginatorAboveTable: false,
     showPaginatorBelowTable: true,
     maxPagesToShow: 5,
     activePageItemClassName: "active-page-item",
     useCustomPagination: false,
+    paginatorClassName: "paginator",
+    paginatorItemClassName: "paginator-item",
     glyphs: {
       FirstPage: () => /* @__PURE__ */ jsx("span", { children: "«" }),
       PreviousPage: () => /* @__PURE__ */ jsx("span", { children: "‹" }),
@@ -179,14 +203,18 @@ function TableHeader({ column, sortProperties, onSort, config }) {
   if (!column.getSortProperty) {
     return /* @__PURE__ */ jsx(TableComponents.TableHeader, { className: column.headerClassName, children: column.title }, column.key);
   }
+  const SortGlyphs = _config.table.sortGlyphs;
+  const isSortable = !!column.getSortProperty;
+  const isSortingActive = !!column.getSortProperty && isSortingSelected;
   return /* @__PURE__ */ jsxs(
     TableComponents.TableHeader,
     {
       onClick: () => onSort(column.getSortProperty),
       className: column.headerClassName,
+      issortable: isSortable,
       children: [
         column.title,
-        !!column.getSortProperty && isSortingSelected && (sortProperties.direction === SortDirection.Ascending ? /* @__PURE__ */ jsx(Fragment, {}) : /* @__PURE__ */ jsx(Fragment, {}))
+        isSortingActive && (sortProperties.direction === SortDirection.Ascending ? /* @__PURE__ */ jsx(SortGlyphs.Ascending, {}) : /* @__PURE__ */ jsx(SortGlyphs.Descending, {}))
       ]
     },
     column.key
@@ -252,7 +280,15 @@ function SmartTable({
   }, [columns]);
   const TableComponents = _config.components;
   return /* @__PURE__ */ jsxs(TableComponents.TableContainer, { children: [
-    _config.pagination.showPaginatorAboveTable && /* @__PURE__ */ jsx(Paginator, { activePage, pageCount, onSetActivePage: setActivePage }),
+    _config.pagination.showPaginatorAboveTable && /* @__PURE__ */ jsx(
+      Paginator,
+      {
+        activePage,
+        pageCount,
+        onSetActivePage: setActivePage,
+        config
+      }
+    ),
     /* @__PURE__ */ jsxs(TableComponents.Table, { className: tableClassName, children: [
       /* @__PURE__ */ jsx(TableComponents.TableHead, { children: /* @__PURE__ */ jsx(TableComponents.TableRow, { className: headerRowClassName, children: validColumns.map((column) => {
         if (column.renderHeader) {
@@ -298,7 +334,15 @@ function SmartTable({
         );
       }) })
     ] }),
-    _config.pagination.showPaginatorBelowTable && /* @__PURE__ */ jsx(Paginator, { activePage, pageCount, onSetActivePage: setActivePage })
+    _config.pagination.showPaginatorBelowTable && /* @__PURE__ */ jsx(
+      Paginator,
+      {
+        activePage,
+        pageCount,
+        onSetActivePage: setActivePage,
+        config
+      }
+    )
   ] });
 }
 

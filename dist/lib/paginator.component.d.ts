@@ -5,9 +5,10 @@ type PaginatorItemProps = {
     activeClassName?: string;
     onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
     children: React.ReactNode;
+    config?: DeepPartial<SmartTableConfig>;
     [x: string]: unknown;
 };
-export declare function PaginatorItem({ active, activeClassName, onClick, children, ...rest }: PaginatorItemProps): JSX.Element;
+export declare function PaginatorItem({ active, activeClassName, onClick, children, config, ...rest }: PaginatorItemProps): JSX.Element;
 export type PaginatorProps = {
     activePage: number;
     pageCount: number;
