@@ -33,6 +33,8 @@ export type SmartTableConfig = {
 		maxPagesToShow: number
 		activePageItemClassName: string
 		useCustomPagination: boolean
+		paginatorClassName: string
+		paginatorItemClassName: string
 		glyphs: {
 			FirstPage: ComponentType<any>
 			PreviousPage: ComponentType<any>
@@ -67,6 +69,8 @@ export const DefaultSmartTableConfig: SmartTableConfig = {
 		maxPagesToShow: 5,
 		activePageItemClassName: 'active-page-item',
 		useCustomPagination: false,
+		paginatorClassName: 'paginator',
+		paginatorItemClassName: 'paginator-item',
 		glyphs: {
 			FirstPage: () => <span>&laquo;</span>,
 			PreviousPage: () => <span>&lsaquo;</span>,

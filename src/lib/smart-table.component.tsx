@@ -165,7 +165,12 @@ export function SmartTable<T extends Record<string, unknown>>({
 	return (
 		<TableComponents.TableContainer>
 			{_config.pagination.showPaginatorAboveTable && (
-				<Paginator activePage={activePage} pageCount={pageCount} onSetActivePage={setActivePage} />
+				<Paginator
+					activePage={activePage}
+					pageCount={pageCount}
+					onSetActivePage={setActivePage}
+					config={config}
+				/>
 			)}
 			<TableComponents.Table className={tableClassName}>
 				<TableComponents.TableHead>
@@ -230,7 +235,12 @@ export function SmartTable<T extends Record<string, unknown>>({
 				</TableComponents.TableBody>
 			</TableComponents.Table>
 			{_config.pagination.showPaginatorBelowTable && (
-				<Paginator activePage={activePage} pageCount={pageCount} onSetActivePage={setActivePage} />
+				<Paginator
+					activePage={activePage}
+					pageCount={pageCount}
+					onSetActivePage={setActivePage}
+					config={config}
+				/>
 			)}
 		</TableComponents.TableContainer>
 	)

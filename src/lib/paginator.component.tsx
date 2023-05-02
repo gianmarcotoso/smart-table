@@ -8,12 +8,26 @@ type PaginatorItemProps = {
 	activeClassName?: string
 	onClick: (event: React.MouseEvent<HTMLDivElement>) => void
 	children: React.ReactNode
+	config?: DeepPartial<SmartTableConfig>
 	[x: string]: unknown
 }
 
-export function PaginatorItem({ active = false, activeClassName, onClick, children, ...rest }: PaginatorItemProps) {
+export function PaginatorItem({
+	active = false,
+	activeClassName,
+	onClick,
+	children,
+	config,
+	...rest
+}: PaginatorItemProps) {
+	const _config = useConfig(config)
+
 	return (
-		<div onClick={onClick} className={active ? activeClassName : ''} {...rest}>
+		<div
+			onClick={onClick}
+			className={`${_config.pagination.paginatorItemClassName ?? ''} ${active ? activeClassName : ''}`}
+			{...rest}
+		>
 			{children}
 		</div>
 	)
@@ -78,7 +92,7 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 	}
 
 	return (
-		<Components.Paginator>
+		<div className={_config.pagination.paginatorClassName}>
 			<Components.PaginatorItem data-page={0} onClick={handleSetActivePage}>
 				<Glyphs.FirstPage />
 			</Components.PaginatorItem>
@@ -120,6 +134,6 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 			<Components.PaginatorItem data-page={pageCount - 1} onClick={handleSetActivePage}>
 				<Glyphs.LastPage />
 			</Components.PaginatorItem>
-		</Components.Paginator>
+		</div>
 	)
 }
