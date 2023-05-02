@@ -14,6 +14,8 @@ export type PaginatorProps = {
     pageCount: number;
     onSetActivePage: (number: number) => void;
     config?: DeepPartial<SmartTableConfig>;
+    children?: React.ReactNode;
 };
+export declare function DefaultPaginator({ children }: PaginatorProps): JSX.Element;
 export declare function Paginator({ activePage, pageCount, onSetActivePage, config }: PaginatorProps): JSX.Element | null;
 export {};

@@ -31,6 +31,10 @@ function PaginatorItem({
     }
   );
 }
+function DefaultPaginator({ children }) {
+  const _config = useConfig();
+  return /* @__PURE__ */ jsx("div", { className: _config.pagination.paginatorClassName, children });
+}
 function Paginator({ activePage, pageCount, onSetActivePage, config }) {
   const _config = useConfig(config);
   const Components = _config.components;
@@ -67,7 +71,7 @@ function Paginator({ activePage, pageCount, onSetActivePage, config }) {
   if (pageCount < 2) {
     return null;
   }
-  return /* @__PURE__ */ jsxs("div", { className: _config.pagination.paginatorClassName, children: [
+  return /* @__PURE__ */ jsxs(Components.Paginator, { children: [
     /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": 0, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.FirstPage, {}) }),
     /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": activePage - 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.PreviousPage, {}) }),
     threshold + activePage >= _config.pagination.maxPagesToShow && /* @__PURE__ */ jsx(
@@ -113,7 +117,7 @@ const DefaultSmartTableConfig = {
     TableHeader: "th",
     TableRow: "tr",
     TableCell: "td",
-    Paginator,
+    Paginator: DefaultPaginator,
     PaginatorItem
   },
   table: {
