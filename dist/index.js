@@ -12,24 +12,8 @@ function deepMerge(v1, v2) {
   }
 }
 
-function PaginatorItem({
-  active = false,
-  activeClassName,
-  onClick,
-  children,
-  config,
-  ...rest
-}) {
-  const _config = useConfig(config);
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      onClick,
-      className: `${_config.pagination.paginatorItemClassName ?? ""} ${active ? activeClassName : ""}`,
-      ...rest,
-      children
-    }
-  );
+function DefaultPaginatorItem({ active = false, className, onClick, children, ...rest }) {
+  return /* @__PURE__ */ jsx("div", { "data-active": active, onClick, className, ...rest, children });
 }
 function DefaultPaginator({ children }) {
   const _config = useConfig();
@@ -88,7 +72,7 @@ function Paginator({ activePage, pageCount, onSetActivePage, config }) {
         {
           "data-page": i + threshold,
           active: i + threshold === activePage,
-          activeClassName: _config.pagination.activePageItemClassName,
+          className: i + threshold === activePage ? _config.pagination.activePageItemClassName : "",
           onClick: handleSetActivePage,
           children: i + 1 + threshold
         },
@@ -118,7 +102,7 @@ const DefaultSmartTableConfig = {
     TableRow: "tr",
     TableCell: "td",
     Paginator: DefaultPaginator,
-    PaginatorItem
+    PaginatorItem: DefaultPaginatorItem
   },
   table: {
     sortGlyphs: {
@@ -198,6 +182,10 @@ const useSort = (items, predicate, direction) => {
   return sortedItems;
 };
 
+function isIntrinsicComponent(Component) {
+  return !(typeof Component === "function" || typeof Component === "object" && Component.prototype && Component.prototype.isReactComponent);
+}
+
 function TableHeader({ column, sortProperties, onSort, config }) {
   const _config = useConfig(config);
   const TableComponents = _config.components;
@@ -210,12 +198,28 @@ function TableHeader({ column, sortProperties, onSort, config }) {
   const SortGlyphs = _config.table.sortGlyphs;
   const isSortable = !!column.getSortProperty;
   const isSortingActive = !!column.getSortProperty && isSortingSelected;
+  const isIntrinsic = isIntrinsicComponent(TableComponents.TableHeader);
+  if (isIntrinsic) {
+    return /* @__PURE__ */ jsxs(
+      TableComponents.TableHeader,
+      {
+        onClick: () => onSort(column.getSortProperty),
+        className: column.headerClassName,
+        "data-is-sortable": isSortable,
+        children: [
+          column.title,
+          isSortingActive && (sortProperties.direction === SortDirection.Ascending ? /* @__PURE__ */ jsx(SortGlyphs.Ascending, {}) : /* @__PURE__ */ jsx(SortGlyphs.Descending, {}))
+        ]
+      },
+      column.key
+    );
+  }
   return /* @__PURE__ */ jsxs(
     TableComponents.TableHeader,
     {
       onClick: () => onSort(column.getSortProperty),
       className: column.headerClassName,
-      issortable: isSortable,
+      isSortable,
       children: [
         column.title,
         isSortingActive && (sortProperties.direction === SortDirection.Ascending ? /* @__PURE__ */ jsx(SortGlyphs.Ascending, {}) : /* @__PURE__ */ jsx(SortGlyphs.Descending, {}))

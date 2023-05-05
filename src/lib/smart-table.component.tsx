@@ -7,6 +7,7 @@ import { usePagination } from './hooks/use-pagination.hook'
 import { SortDirection, SortPredicate, SortPredicateResult, useSort } from './hooks/use-sort.hook'
 import { Paginator } from './paginator.component'
 import { DeepPartial, SmartTableConfig } from './smart-table-config.context'
+import { isIntrinsicComponent } from './functions/is-intrinsic-component'
 
 export type TableColumn<T = Record<string, unknown>> = {
 	key: string
@@ -70,12 +71,33 @@ export function TableHeader<T>({ column, sortProperties, onSort, config }: Table
 	const isSortable = !!column.getSortProperty
 	const isSortingActive = !!column.getSortProperty && isSortingSelected
 
+	const isIntrinsic = isIntrinsicComponent(TableComponents.TableHeader)
+
+	if (isIntrinsic) {
+		return (
+			<TableComponents.TableHeader
+				key={column.key}
+				onClick={() => onSort(column.getSortProperty!)}
+				className={column.headerClassName}
+				data-is-sortable={isSortable}
+			>
+				{column.title}
+				{isSortingActive &&
+					(sortProperties.direction === SortDirection.Ascending ? (
+						<SortGlyphs.Ascending />
+					) : (
+						<SortGlyphs.Descending />
+					))}
+			</TableComponents.TableHeader>
+		)
+	}
+
 	return (
 		<TableComponents.TableHeader
 			key={column.key}
 			onClick={() => onSort(column.getSortProperty!)}
 			className={column.headerClassName}
-			issortable={isSortable}
+			isSortable={isSortable}
 		>
 			{column.title}
 			{isSortingActive &&

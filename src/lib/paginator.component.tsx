@@ -5,29 +5,16 @@ import { DeepPartial, SmartTableConfig } from './smart-table-config.context'
 
 type PaginatorItemProps = {
 	active?: boolean
-	activeClassName?: string
+	className?: string
 	onClick: (event: React.MouseEvent<HTMLDivElement>) => void
 	children: React.ReactNode
 	config?: DeepPartial<SmartTableConfig>
 	[x: string]: unknown
 }
 
-export function PaginatorItem({
-	active = false,
-	activeClassName,
-	onClick,
-	children,
-	config,
-	...rest
-}: PaginatorItemProps) {
-	const _config = useConfig(config)
-
+export function DefaultPaginatorItem({ active = false, className, onClick, children, ...rest }: PaginatorItemProps) {
 	return (
-		<div
-			onClick={onClick}
-			className={`${_config.pagination.paginatorItemClassName ?? ''} ${active ? activeClassName : ''}`}
-			{...rest}
-		>
+		<div data-active={active} onClick={onClick} className={className} {...rest}>
 			{children}
 		</div>
 	)
@@ -120,7 +107,7 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 						data-page={i + threshold}
 						key={i + threshold}
 						active={i + threshold === activePage}
-						activeClassName={_config.pagination.activePageItemClassName}
+						className={i + threshold === activePage ? _config.pagination.activePageItemClassName : ''}
 						onClick={handleSetActivePage}
 					>
 						{i + 1 + threshold}

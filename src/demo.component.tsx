@@ -1,6 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.css'
 import { SmartTable, TableColumn } from './lib/smart-table.component'
-import { Pagination, Table } from 'react-bootstrap'
 import { DeepPartial, SmartTableConfig, SmartTableConfigProvider } from './lib/smart-table-config.context'
 
 const items = [
@@ -137,11 +135,7 @@ const items = [
 ]
 
 const config: DeepPartial<SmartTableConfig> = {
-	components: {
-		Table: Table,
-		Paginator: Pagination,
-		PaginatorItem: Pagination.Item,
-	},
+	components: {},
 }
 
 const SortProperties = {

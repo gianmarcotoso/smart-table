@@ -30,17 +30,5 @@
 		"typescript": "^5.0.2",
 		"vite": "^4.3.0",
 		"vite-plugin-dts": "^2.3.0"
-	},
-	"peerDependencies": {
-		"bootstrap": "^5.2.3",
-		"react-bootstrap": "^2.7.4"
-	},
-	"peerDependenciesMeta": {
-		"bootstrap": {
-			"optional": true
-		},
-		"react-bootstrap": {
-			"optional": true
-		}
 	}
 }
