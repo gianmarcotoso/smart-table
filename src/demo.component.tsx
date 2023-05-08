@@ -157,7 +157,7 @@ export function Demo() {
 			getValue: (item) => {
 				return <strong>{item.name}</strong>
 			},
-			getSortProperty: SortProperties.name,
+			getSortProperty: 'name',
 		},
 		{
 			key: 'age',
@@ -175,6 +175,7 @@ export function Demo() {
 		{
 			key: 'favoriteAnimals',
 			title: 'Favorite Animals',
+			getSortProperty: 'favorite',
 			getValue: (item) => {
 				return item.favoriteAnimals.join(', ')
 			},
@@ -196,6 +197,10 @@ export function Demo() {
 					items={items}
 					columns={columns}
 					getItemKey={(item) => item.id}
+					serverSideSorting
+					onSortChange={(sortProperty) => {
+						console.log(sortProperty)
+					}}
 					paginationOptions={{
 						pageSize: 5,
 					}}

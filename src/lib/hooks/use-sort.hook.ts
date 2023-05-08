@@ -6,9 +6,7 @@ export enum SortDirection {
 	Descending,
 }
 
-export type SortPredicateResult<T> = ((item: T) => string | number) | string | string[]
-
-export type SortPredicate<T = any> = SortPredicateResult<T>
+export type SortPredicate<T = any> = ((item: T) => string | number) | string | string[]
 
 export const useSort = <T>(items: T[], predicate: SortPredicate, direction: SortDirection) => {
 	const [sortedItems, setSortedItems] = useState(items || [])
@@ -17,6 +15,10 @@ export const useSort = <T>(items: T[], predicate: SortPredicate, direction: Sort
 	}, [direction])
 
 	useEffect(() => {
+		if (!items || items.length === 0) {
+			return
+		}
+
 		if (typeof predicate === 'function') {
 			const sortByPredicate = sort(sortDirectionFn(predicate))
 

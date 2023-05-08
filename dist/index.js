@@ -191,6 +191,9 @@ const useSort = (items, predicate, direction) => {
     return direction === 0 /* Ascending */ ? ascend : descend;
   }, [direction]);
   useEffect(() => {
+    if (!items || items.length === 0) {
+      return;
+    }
     if (typeof predicate === "function") {
       const sortByPredicate = sort(sortDirectionFn(predicate));
       setSortedItems(sortByPredicate(items));
@@ -264,16 +267,22 @@ function SmartTable({
   defaultSortProperties,
   paginationOptions,
   onPageChange,
+  serverSideSorting = false,
+  onSortChange,
   config
 }) {
   const _config = useConfig(config);
+  const stableOnSortChange = useStableCallback(
+    onSortChange ?? (() => {
+    })
+  );
   const [sortProperties, setSortProperties] = useState({
     property: defaultSortProperties?.property ?? getItemKey,
     direction: defaultSortProperties?.direction ?? SortDirection.Ascending
   });
   const sortedItems = useSort(items, sortProperties.property, sortProperties.direction);
   const { pageItems, pageCount, activePage, setActivePage } = usePagination({
-    items: sortedItems,
+    items: serverSideSorting ? items : sortedItems,
     options: paginationOptions,
     onPageChange
   });
@@ -282,6 +291,9 @@ function SmartTable({
       setActivePage(0);
     }
   }, [items, setActivePage, paginationOptions?.totalItems]);
+  useEffect(() => {
+    stableOnSortChange?.(sortProperties);
+  }, [sortProperties, stableOnSortChange]);
   const handleSortPropertyChange = useCallback(
     function handleSortPropertyChange2(property) {
       if (sortProperties.property === property) {
