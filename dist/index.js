@@ -1,6 +1,10 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
-import { useMemo, useCallback, createContext, useContext, useState, useEffect } from 'react';
+import { useMemo, useCallback, createContext, useContext, useRef, useEffect, useState } from 'react';
 import { uniq, concat, isNil, mergeWith, splitEvery, ascend, descend, sort, path, prop } from 'ramda';
+
+function isIntrinsicComponent(Component) {
+  return !(typeof Component === "function" || typeof Component === "object" && Component.prototype && Component.prototype.isReactComponent);
+}
 
 function deepMerge(v1, v2) {
   if (Array.isArray(v1) && Array.isArray(v2)) {
@@ -138,19 +142,41 @@ function useConfig(localConfig = {}) {
   return deepMerge(config, localConfig);
 }
 
-function usePagination(items = [], pageSize = 10) {
+function useStableCallback(fn) {
+  const ref = useRef(fn);
+  useEffect(() => {
+    ref.current = fn;
+  });
+  const stableCallback = useCallback((...args) => ref.current(...args), []);
+  return stableCallback;
+}
+
+function usePagination({ items = [], options, onPageChange }) {
   const [activePage, setActivePage] = useState(0);
+  const stableOnPageChange = useStableCallback(
+    onPageChange ?? (() => {
+    })
+  );
   useEffect(() => {
     setActivePage(0);
-  }, [pageSize]);
+  }, [options?.pageSize]);
+  useEffect(() => {
+    stableOnPageChange?.(activePage);
+  }, [activePage, stableOnPageChange]);
   const [pageItems, pageCount] = useMemo(() => {
-    const pages = splitEvery(pageSize, items);
-    if (pages.length === 0) {
-      return [[], 0];
+    if (!options?.totalItems) {
+      const pages = splitEvery(options?.pageSize ?? DEFAULT_PAGE_SIZE, items);
+      if (pages.length === 0) {
+        return [[], 0];
+      }
+      const pageItems3 = pages[activePage] || [];
+      const pageCount3 = pages.length;
+      return [pageItems3, pageCount3];
     }
-    const pageItems2 = pages[activePage] || [];
-    return [pageItems2, pages.length];
-  }, [items, pageSize, activePage]);
+    const pageCount2 = Math.ceil(options.totalItems / options.pageSize);
+    const pageItems2 = items;
+    return [pageItems2, pageCount2];
+  }, [items, options?.pageSize, options?.totalItems, activePage]);
   return { pageItems, pageCount, activePage, setActivePage };
 }
 
@@ -182,10 +208,7 @@ const useSort = (items, predicate, direction) => {
   return sortedItems;
 };
 
-function isIntrinsicComponent(Component) {
-  return !(typeof Component === "function" || typeof Component === "object" && Component.prototype && Component.prototype.isReactComponent);
-}
-
+const DEFAULT_PAGE_SIZE = 25;
 function TableHeader({ column, sortProperties, onSort, config }) {
   const _config = useConfig(config);
   const TableComponents = _config.components;
@@ -239,7 +262,8 @@ function SmartTable({
   onRowClick,
   parseDatasetValue = (value) => value,
   defaultSortProperties,
-  pageSize = 20,
+  paginationOptions,
+  onPageChange,
   config
 }) {
   const _config = useConfig(config);
@@ -248,10 +272,16 @@ function SmartTable({
     direction: defaultSortProperties?.direction ?? SortDirection.Ascending
   });
   const sortedItems = useSort(items, sortProperties.property, sortProperties.direction);
-  const { pageItems, pageCount, activePage, setActivePage } = usePagination(sortedItems, pageSize);
+  const { pageItems, pageCount, activePage, setActivePage } = usePagination({
+    items: sortedItems,
+    options: paginationOptions,
+    onPageChange
+  });
   useEffect(() => {
-    setActivePage(0);
-  }, [items, setActivePage]);
+    if (!paginationOptions?.totalItems) {
+      setActivePage(0);
+    }
+  }, [items, setActivePage, paginationOptions?.totalItems]);
   const handleSortPropertyChange = useCallback(
     function handleSortPropertyChange2(property) {
       if (sortProperties.property === property) {
@@ -332,7 +362,11 @@ function SmartTable({
                 {
                   className: `${commonCellClass} ${cellClass}`,
                   width: column.width,
-                  children: column.getValue?.(item, activePage * pageSize + index, sortedItems) ?? item[column.key] ?? column.value
+                  children: column.getValue?.(
+                    item,
+                    activePage * (paginationOptions?.pageSize ?? DEFAULT_PAGE_SIZE) + index,
+                    sortedItems
+                  ) ?? item[column.key] ?? column.value
                 },
                 column.key
               );

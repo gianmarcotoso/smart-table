@@ -1,6 +1,5 @@
-import { SmartTable, TableColumn } from './lib/smart-table.component'
 import { DeepPartial, SmartTableConfig, SmartTableConfigProvider } from './lib/smart-table-config.context'
-import { useState } from 'react'
+import { SmartTable, TableColumn } from './lib/smart-table.component'
 
 const items = [
 	{
@@ -146,12 +145,6 @@ const SortProperties = {
 }
 
 export function Demo() {
-	const [page, setPage] = useState(0)
-
-	function onPageChange(page: number) {
-		setPage(page)
-	}
-
 	const columns: TableColumn<(typeof items)[number]>[] = [
 		{
 			key: 'id',
@@ -203,7 +196,6 @@ export function Demo() {
 					items={items}
 					columns={columns}
 					getItemKey={(item) => item.id}
-					onPageChange={onPageChange}
 					paginationOptions={{
 						pageSize: 5,
 					}}
