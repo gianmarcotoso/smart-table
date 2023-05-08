@@ -1,5 +1,6 @@
 export type PaginationOptions = {
     pageSize: number;
+    activePage?: number;
     totalItems?: number;
 };
 export type PaginationHookData<T> = {
@@ -11,5 +12,5 @@ export declare function usePagination<T>({ items, options, onPageChange }: Pagin
     pageItems: T[];
     pageCount: number;
     activePage: number;
-    setActivePage: import("react").Dispatch<import("react").SetStateAction<number>>;
+    setActivePage: (page: number) => void;
 };

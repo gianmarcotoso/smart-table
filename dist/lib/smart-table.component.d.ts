@@ -1,10 +1,7 @@
+import { PaginationOptions } from './hooks/use-pagination.hook';
 import { SortDirection, SortPredicate } from './hooks/use-sort.hook';
 import { DeepPartial, SmartTableConfig } from './smart-table-config.context';
 export declare const DEFAULT_PAGE_SIZE = 25;
-export type PaginationOptions = {
-    pageSize: number;
-    totalItems?: number;
-};
 export type TableColumn<T = Record<string, unknown>> = {
     key: string;
     title: string;

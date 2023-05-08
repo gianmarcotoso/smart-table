@@ -152,17 +152,23 @@ function useStableCallback(fn) {
 }
 
 function usePagination({ items = [], options, onPageChange }) {
-  const [activePage, setActivePage] = useState(0);
+  const [activePage, setActivePage] = useState(options?.activePage ?? 0);
   const stableOnPageChange = useStableCallback(
     onPageChange ?? (() => {
     })
   );
   useEffect(() => {
-    setActivePage(0);
-  }, [options?.pageSize]);
-  useEffect(() => {
-    stableOnPageChange?.(activePage);
-  }, [activePage, stableOnPageChange]);
+    setActivePage(options?.activePage ?? 0);
+  }, [options?.pageSize, options?.activePage]);
+  const handlePageChange = useCallback(
+    function handlePageChange2(page) {
+      if (typeof options?.activePage !== "number") {
+        setActivePage(page);
+      }
+      stableOnPageChange?.(page);
+    },
+    [options?.activePage, stableOnPageChange]
+  );
   const [pageItems, pageCount] = useMemo(() => {
     if (!options?.totalItems) {
       const pages = splitEvery(options?.pageSize ?? DEFAULT_PAGE_SIZE, items);
@@ -177,7 +183,7 @@ function usePagination({ items = [], options, onPageChange }) {
     const pageItems2 = items;
     return [pageItems2, pageCount2];
   }, [items, options?.pageSize, options?.totalItems, activePage]);
-  return { pageItems, pageCount, activePage, setActivePage };
+  return { pageItems, pageCount, activePage, setActivePage: handlePageChange };
 }
 
 var SortDirection = /* @__PURE__ */ ((SortDirection2) => {
@@ -288,9 +294,9 @@ function SmartTable({
   });
   useEffect(() => {
     if (!paginationOptions?.totalItems) {
-      setActivePage(0);
+      setActivePage(paginationOptions?.activePage ?? 0);
     }
-  }, [items, setActivePage, paginationOptions?.totalItems]);
+  }, [items, setActivePage, paginationOptions?.totalItems, paginationOptions?.activePage]);
   useEffect(() => {
     stableOnSortChange?.(sortProperties);
   }, [sortProperties, stableOnSortChange]);
