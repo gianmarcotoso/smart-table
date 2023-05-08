@@ -1,10 +1,11 @@
 import { splitEvery } from 'ramda'
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useCallback } from 'react'
 import { useStableCallback } from './use-stable-callback.hook'
 import { DEFAULT_PAGE_SIZE } from '../smart-table.component'
 
 export type PaginationOptions = {
 	pageSize: number
+	activePage?: number
 	totalItems?: number
 }
 
@@ -15,7 +16,7 @@ export type PaginationHookData<T> = {
 }
 
 export function usePagination<T>({ items = [], options, onPageChange }: PaginationHookData<T>) {
-	const [activePage, setActivePage] = useState(0)
+	const [activePage, setActivePage] = useState(options?.activePage ?? 0)
 	const stableOnPageChange = useStableCallback(
 		onPageChange ??
 			(() => {
@@ -24,12 +25,19 @@ export function usePagination<T>({ items = [], options, onPageChange }: Paginati
 	)
 
 	useEffect(() => {
-		setActivePage(0)
-	}, [options?.pageSize])
+		setActivePage(options?.activePage ?? 0)
+	}, [options?.pageSize, options?.activePage])
 
-	useEffect(() => {
-		stableOnPageChange?.(activePage)
-	}, [activePage, stableOnPageChange])
+	const handlePageChange = useCallback(
+		function handlePageChange(page: number) {
+			if (typeof options?.activePage !== 'number') {
+				setActivePage(page)
+			}
+
+			stableOnPageChange?.(page)
+		},
+		[options?.activePage, stableOnPageChange],
+	)
 
 	const [pageItems, pageCount] = useMemo(() => {
 		if (!options?.totalItems) {
@@ -51,5 +59,5 @@ export function usePagination<T>({ items = [], options, onPageChange }: Paginati
 		return [pageItems, pageCount]
 	}, [items, options?.pageSize, options?.totalItems, activePage])
 
-	return { pageItems, pageCount, activePage, setActivePage }
+	return { pageItems, pageCount, activePage, setActivePage: handlePageChange }
 }

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { DeepPartial, SmartTableConfig, SmartTableConfigProvider } from './lib/smart-table-config.context'
 import { SmartTable, TableColumn } from './lib/smart-table.component'
 
@@ -189,6 +190,8 @@ export function Demo() {
 		},
 	]
 
+	const [page, setPage] = useState(0)
+
 	return (
 		<SmartTableConfigProvider config={config}>
 			<div>
@@ -197,14 +200,20 @@ export function Demo() {
 					items={items}
 					columns={columns}
 					getItemKey={(item) => item.id}
-					serverSideSorting
-					onSortChange={(sortProperty) => {
-						console.log(sortProperty)
+					onSortChange={() => {
+						// no op
+					}}
+					onPageChange={(page) => {
+						setPage(page)
 					}}
 					paginationOptions={{
 						pageSize: 5,
+						activePage: page,
 					}}
 				/>
+
+				<button onClick={() => setPage(0)}>0</button>
+				<button onClick={() => setPage(1)}>1</button>
 			</div>
 		</SmartTableConfigProvider>
 	)

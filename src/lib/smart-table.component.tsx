@@ -2,18 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { isIntrinsicComponent } from './functions/is-intrinsic-component'
 import { useConfig } from './hooks/use-config.hook'
-import { usePagination } from './hooks/use-pagination.hook'
+import { PaginationOptions, usePagination } from './hooks/use-pagination.hook'
 import { SortDirection, SortPredicate, useSort } from './hooks/use-sort.hook'
 import { Paginator } from './paginator.component'
 import { DeepPartial, SmartTableConfig } from './smart-table-config.context'
 import { useStableCallback } from './hooks/use-stable-callback.hook'
 
 export const DEFAULT_PAGE_SIZE = 25 // eslint-disable-line
-
-export type PaginationOptions = {
-	pageSize: number
-	totalItems?: number
-}
 
 export type TableColumn<T = Record<string, unknown>> = {
 	key: string
@@ -159,9 +154,9 @@ export function SmartTable<T extends Record<string, unknown>>({
 
 	useEffect(() => {
 		if (!paginationOptions?.totalItems) {
-			setActivePage(0)
+			setActivePage(paginationOptions?.activePage ?? 0)
 		}
-	}, [items, setActivePage, paginationOptions?.totalItems])
+	}, [items, setActivePage, paginationOptions?.totalItems, paginationOptions?.activePage])
 
 	useEffect(() => {
 		stableOnSortChange?.(sortProperties)
