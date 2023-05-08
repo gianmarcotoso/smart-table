@@ -1,13 +1,18 @@
-import { useEffect } from 'react'
-import { useCallback, useMemo } from 'react'
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { isIntrinsicComponent } from './functions/is-intrinsic-component'
 import { useConfig } from './hooks/use-config.hook'
 import { usePagination } from './hooks/use-pagination.hook'
 import { SortDirection, SortPredicate, SortPredicateResult, useSort } from './hooks/use-sort.hook'
 import { Paginator } from './paginator.component'
 import { DeepPartial, SmartTableConfig } from './smart-table-config.context'
-import { isIntrinsicComponent } from './functions/is-intrinsic-component'
+
+export const DEFAULT_PAGE_SIZE = 25 // eslint-disable-line
+
+export type PaginationOptions = {
+	pageSize: number
+	totalItems?: number
+}
 
 export type TableColumn<T = Record<string, unknown>> = {
 	key: string
@@ -46,8 +51,9 @@ export type TableProps<T> = {
 	onRowClick?: (item: T) => void
 	parseDatasetValue?: (value: string) => any
 	defaultSortProperties?: SortProperties<T>
-	pageSize?: number
 	config?: DeepPartial<SmartTableConfig>
+	paginationOptions?: PaginationOptions
+	onPageChange?: (page: number) => void
 }
 
 export function TableHeader<T>({ column, sortProperties, onSort, config }: TableHeaderProps<T>) {
@@ -121,7 +127,8 @@ export function SmartTable<T extends Record<string, unknown>>({
 	onRowClick,
 	parseDatasetValue = (value) => value,
 	defaultSortProperties,
-	pageSize = 20,
+	paginationOptions,
+	onPageChange,
 	config,
 }: TableProps<T>) {
 	const _config = useConfig(config)
@@ -133,11 +140,17 @@ export function SmartTable<T extends Record<string, unknown>>({
 
 	const sortedItems = useSort(items, sortProperties.property, sortProperties.direction)
 
-	const { pageItems, pageCount, activePage, setActivePage } = usePagination(sortedItems, pageSize)
+	const { pageItems, pageCount, activePage, setActivePage } = usePagination({
+		items: sortedItems,
+		options: paginationOptions,
+		onPageChange,
+	})
 
 	useEffect(() => {
-		setActivePage(0)
-	}, [items, setActivePage])
+		if (!paginationOptions?.totalItems) {
+			setActivePage(0)
+		}
+	}, [items, setActivePage, paginationOptions?.totalItems])
 
 	const handleSortPropertyChange = useCallback(
 		function handleSortPropertyChange(property: SortPredicate) {
@@ -245,7 +258,11 @@ export function SmartTable<T extends Record<string, unknown>>({
 											className={`${commonCellClass} ${cellClass}`}
 											width={column.width}
 										>
-											{column.getValue?.(item, activePage * pageSize + index, sortedItems) ??
+											{column.getValue?.(
+												item,
+												activePage * (paginationOptions?.pageSize ?? DEFAULT_PAGE_SIZE) + index,
+												sortedItems,
+											) ??
 												(item[column.key] as React.ReactNode) ??
 												column.value}
 										</TableComponents.TableCell>
