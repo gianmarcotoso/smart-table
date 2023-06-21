@@ -201,9 +201,7 @@ export function SmartTable<T extends Record<string, unknown>>({
 		[items, onRowClick, getItemKey, parseDatasetValue],
 	)
 
-	const validColumns = useMemo(() => {
-		return columns.filter((c) => !!c)
-	}, [columns])
+	const validColumns = columns.filter((c) => !!c)
 
 	const TableComponents = _config.components
 
