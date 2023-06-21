@@ -331,9 +331,7 @@ function SmartTable({
     },
     [items, onRowClick, getItemKey, parseDatasetValue]
   );
-  const validColumns = useMemo(() => {
-    return columns.filter((c) => !!c);
-  }, [columns]);
+  const validColumns = columns.filter((c) => !!c);
   const TableComponents = _config.components;
   return /* @__PURE__ */ jsxs(TableComponents.TableContainer, { children: [
     _config.pagination.showPaginatorAboveTable && /* @__PURE__ */ jsx(
