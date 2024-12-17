@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { DeepPartial, SmartTableConfig, SmartTableConfigProvider } from './lib/smart-table-config.context'
-import { SmartTable, TableColumn } from './lib/smart-table.component'
+import { SmartTable, SortProperties, TableColumn } from './lib/smart-table.component'
+import { SortDirection } from './lib'
 
 const items = [
 	{
@@ -139,18 +140,20 @@ const config: DeepPartial<SmartTableConfig> = {
 	components: {},
 }
 
-const SortProperties = {
-	id: (item: (typeof items)[number]) => item.id,
-	name: (item: (typeof items)[number]) => item.name,
-	age: (item: (typeof items)[number]) => item.age,
+type Item = (typeof items)[number]
+
+const DemoSortPredicates = {
+	id: (item: Item) => item.id,
+	name: (item: Item) => item.name,
+	age: (item: Item) => item.age,
 }
 
 export function Demo() {
-	const columns: TableColumn<(typeof items)[number]>[] = [
+	const columns: TableColumn<Item>[] = [
 		{
 			key: 'id',
 			title: 'ID',
-			getSortProperty: SortProperties.id,
+			getSortProperty: DemoSortPredicates.id,
 		},
 		{
 			key: 'name',
@@ -163,7 +166,7 @@ export function Demo() {
 		{
 			key: 'age',
 			title: 'Age',
-			getSortProperty: SortProperties.age,
+			getSortProperty: DemoSortPredicates.age,
 		},
 		{
 			key: 'favoriteColor',
@@ -191,6 +194,10 @@ export function Demo() {
 	]
 
 	const [page, setPage] = useState(0)
+	const [sortProperties, setSortProperties] = useState<SortProperties<Item>>({
+		direction: SortDirection.Ascending,
+		property: DemoSortPredicates.id,
+	})
 
 	return (
 		<SmartTableConfigProvider config={config}>
@@ -200,8 +207,9 @@ export function Demo() {
 					items={items}
 					columns={columns}
 					getItemKey={(item) => item.id}
-					onSortChange={() => {
-						// no op
+					sortProperties={sortProperties}
+					onSortChange={(sortProperties) => {
+						setSortProperties(sortProperties)
 					}}
 					onPageChange={(page) => {
 						setPage(page)
@@ -214,6 +222,21 @@ export function Demo() {
 
 				<button onClick={() => setPage(0)}>0</button>
 				<button onClick={() => setPage(1)}>1</button>
+
+				<button
+					onClick={() =>
+						setSortProperties({ property: DemoSortPredicates.id, direction: SortDirection.Ascending })
+					}
+				>
+					Sort by ID Ascending
+				</button>
+				<button
+					onClick={() =>
+						setSortProperties({ property: DemoSortPredicates.age, direction: SortDirection.Descending })
+					}
+				>
+					Sort by Age Descending
+				</button>
 			</div>
 		</SmartTableConfigProvider>
 	)

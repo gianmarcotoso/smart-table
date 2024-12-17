@@ -270,6 +270,7 @@ function SmartTable({
   headerRowClassName = "",
   onRowClick,
   parseDatasetValue = (value) => value,
+  sortProperties,
   defaultSortProperties,
   paginationOptions,
   onPageChange,
@@ -282,11 +283,15 @@ function SmartTable({
     onSortChange ?? (() => {
     })
   );
-  const [sortProperties, setSortProperties] = useState({
+  const [uncontrolledSortProperties, setUncontrolledSortProperties] = useState({
     property: defaultSortProperties?.property ?? getItemKey,
     direction: defaultSortProperties?.direction ?? SortDirection.Ascending
   });
-  const sortedItems = useSort(items, sortProperties.property, sortProperties.direction);
+  const sortedItems = useSort(
+    items,
+    sortProperties?.property ?? uncontrolledSortProperties.property,
+    sortProperties?.direction ?? uncontrolledSortProperties.direction
+  );
   const { pageItems, pageCount, activePage, setActivePage } = usePagination({
     items: serverSideSorting ? items : sortedItems,
     options: paginationOptions,
@@ -297,13 +302,14 @@ function SmartTable({
       setActivePage(paginationOptions?.activePage ?? 0);
     }
   }, [items, setActivePage, paginationOptions?.totalItems, paginationOptions?.activePage]);
-  useEffect(() => {
-    stableOnSortChange?.(sortProperties);
-  }, [sortProperties, stableOnSortChange]);
   const handleSortPropertyChange = useCallback(
     function handleSortPropertyChange2(property) {
-      if (sortProperties.property === property) {
-        setSortProperties((p) => {
+      if (uncontrolledSortProperties.property === property) {
+        stableOnSortChange({
+          property,
+          direction: uncontrolledSortProperties.direction === SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending
+        });
+        setUncontrolledSortProperties((p) => {
           return {
             ...p,
             direction: p.direction === SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending
@@ -311,12 +317,16 @@ function SmartTable({
         });
         return;
       }
-      setSortProperties({
+      stableOnSortChange({
+        property,
+        direction: SortDirection.Ascending
+      });
+      setUncontrolledSortProperties({
         property,
         direction: SortDirection.Ascending
       });
     },
-    [sortProperties]
+    [stableOnSortChange, uncontrolledSortProperties]
   );
   const handleRowClick = useCallback(
     (event) => {
@@ -348,7 +358,7 @@ function SmartTable({
         if (column.renderHeader) {
           return column.renderHeader({
             column,
-            sortProperties,
+            sortProperties: uncontrolledSortProperties,
             onSort: handleSortPropertyChange
           });
         }
@@ -356,7 +366,7 @@ function SmartTable({
           TableHeader,
           {
             column,
-            sortProperties,
+            sortProperties: uncontrolledSortProperties,
             onSort: handleSortPropertyChange
           },
           column.key

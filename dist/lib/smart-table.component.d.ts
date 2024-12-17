@@ -36,6 +36,7 @@ export type TableProps<T> = {
     headerRowClassName?: string;
     onRowClick?: (item: T) => void;
     parseDatasetValue?: (value: string) => any;
+    sortProperties?: SortProperties<T>;
     defaultSortProperties?: SortProperties<T>;
     config?: DeepPartial<SmartTableConfig>;
     paginationOptions?: PaginationOptions;
@@ -43,5 +44,5 @@ export type TableProps<T> = {
     onSortChange?: (sortProperty: SortProperties<T>) => void;
     onPageChange?: (page: number) => void;
 };
-export declare function TableHeader<T>({ column, sortProperties, onSort, config }: TableHeaderProps<T>): JSX.Element;
-export declare function SmartTable<T extends Record<string, unknown>>({ columns, items, getItemKey, tableClassName, rowClassName, commonCellClassName, headerRowClassName, onRowClick, parseDatasetValue, defaultSortProperties, paginationOptions, onPageChange, serverSideSorting, onSortChange, config, }: TableProps<T>): JSX.Element;
+export declare function TableHeader<T>({ column, sortProperties, onSort, config }: TableHeaderProps<T>): import("react/jsx-runtime").JSX.Element;
+export declare function SmartTable<T extends Record<string, unknown>>({ columns, items, getItemKey, tableClassName, rowClassName, commonCellClassName, headerRowClassName, onRowClick, parseDatasetValue, sortProperties, defaultSortProperties, paginationOptions, onPageChange, serverSideSorting, onSortChange, config, }: TableProps<T>): import("react/jsx-runtime").JSX.Element;

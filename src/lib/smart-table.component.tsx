@@ -46,6 +46,7 @@ export type TableProps<T> = {
 	headerRowClassName?: string
 	onRowClick?: (item: T) => void
 	parseDatasetValue?: (value: string) => any
+	sortProperties?: SortProperties<T>
 	defaultSortProperties?: SortProperties<T>
 	config?: DeepPartial<SmartTableConfig>
 	paginationOptions?: PaginationOptions
@@ -124,6 +125,7 @@ export function SmartTable<T extends Record<string, unknown>>({
 	headerRowClassName = '',
 	onRowClick,
 	parseDatasetValue = (value) => value,
+	sortProperties,
 	defaultSortProperties,
 	paginationOptions,
 	onPageChange,
@@ -139,12 +141,16 @@ export function SmartTable<T extends Record<string, unknown>>({
 			}),
 	)
 
-	const [sortProperties, setSortProperties] = useState({
+	const [uncontrolledSortProperties, setUncontrolledSortProperties] = useState({
 		property: defaultSortProperties?.property ?? getItemKey,
 		direction: defaultSortProperties?.direction ?? SortDirection.Ascending,
 	})
 
-	const sortedItems = useSort(items, sortProperties.property, sortProperties.direction)
+	const sortedItems = useSort(
+		items,
+		sortProperties?.property ?? uncontrolledSortProperties.property,
+		sortProperties?.direction ?? uncontrolledSortProperties.direction,
+	)
 
 	const { pageItems, pageCount, activePage, setActivePage } = usePagination({
 		items: serverSideSorting ? items : sortedItems,
@@ -158,14 +164,18 @@ export function SmartTable<T extends Record<string, unknown>>({
 		}
 	}, [items, setActivePage, paginationOptions?.totalItems, paginationOptions?.activePage])
 
-	useEffect(() => {
-		stableOnSortChange?.(sortProperties)
-	}, [sortProperties, stableOnSortChange])
-
 	const handleSortPropertyChange = useCallback(
 		function handleSortPropertyChange(property: SortPredicate) {
-			if (sortProperties.property === property) {
-				setSortProperties((p) => {
+			if (uncontrolledSortProperties.property === property) {
+				stableOnSortChange({
+					property,
+					direction:
+						uncontrolledSortProperties.direction === SortDirection.Ascending
+							? SortDirection.Descending
+							: SortDirection.Ascending,
+				})
+
+				setUncontrolledSortProperties((p) => {
 					return {
 						...p,
 						direction:
@@ -178,12 +188,17 @@ export function SmartTable<T extends Record<string, unknown>>({
 				return
 			}
 
-			setSortProperties({
+			stableOnSortChange({
+				property,
+				direction: SortDirection.Ascending,
+			})
+
+			setUncontrolledSortProperties({
 				property,
 				direction: SortDirection.Ascending,
 			})
 		},
-		[sortProperties],
+		[stableOnSortChange, uncontrolledSortProperties],
 	)
 
 	const handleRowClick = useCallback(
@@ -222,7 +237,7 @@ export function SmartTable<T extends Record<string, unknown>>({
 							if (column.renderHeader) {
 								return column.renderHeader({
 									column,
-									sortProperties: sortProperties,
+									sortProperties: uncontrolledSortProperties,
 									onSort: handleSortPropertyChange,
 								})
 							}
@@ -230,7 +245,7 @@ export function SmartTable<T extends Record<string, unknown>>({
 							return (
 								<TableHeader
 									column={column}
-									sortProperties={sortProperties}
+									sortProperties={uncontrolledSortProperties}
 									onSort={handleSortPropertyChange}
 									key={column.key}
 								/>

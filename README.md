@@ -60,7 +60,8 @@ The full list of props is:
 -   `headerRowClassName`: A class name to be applied to the table header row;
 -   `onRowClick`: A function that receives the `item` and is called when a row is clicked;
 -   `parseDatasetValue`: When clicking on a row, it's item is found by using a data-attribute on the row itself; if this value was originally a number, it needs to be cast back to a number, and this function allows you how the key value should be parsed when reading it from a data-attribute (which is always a string);
--   `defaultSortProperties`: An object containing the default `property` and `direction` for the initial table sort order;
+-   `sortProperties`: An object containing the current `property` and `direction` for the table sort order, if you want to control it from outside the component;
+-   `defaultSortProperties`: An object containing the default `property` and `direction` for the initial table sort order, if you want the table sort order to be uncontrolled;
 -   `config`: An object containing configuration options for the table. Read more about it in the [configuration](#configuration) section below;
 -   `paginationOptions`: An object containing pagination options for the table. Read more about it in the [pagination](#pagination) section below;
 -   `serverSideSorting`: If specified and set to true, tells the Smart Table that both sorting and pagination will happen on the server;
