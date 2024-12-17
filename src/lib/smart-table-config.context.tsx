@@ -1,4 +1,4 @@
-import { ComponentType, createContext } from 'react'
+import React, { ComponentType, createContext } from 'react'
 
 import { deepMerge } from './functions/deep-merge.fn'
 import { DefaultPaginator, DefaultPaginatorItem } from './paginator.component'
@@ -11,13 +11,13 @@ export type DeepPartial<T> = T extends object ? DeepPartialInner<T> : T
 
 export type SmartTableConfig = {
 	components: {
-		TableContainer: ComponentType<any> | keyof JSX.IntrinsicElements
-		Table: ComponentType<any> | keyof JSX.IntrinsicElements
-		TableHead: ComponentType<any> | keyof JSX.IntrinsicElements
-		TableBody: ComponentType<any> | keyof JSX.IntrinsicElements
-		TableHeader: ComponentType<any> | keyof JSX.IntrinsicElements
-		TableRow: ComponentType<any> | keyof JSX.IntrinsicElements
-		TableCell: ComponentType<any> | keyof JSX.IntrinsicElements
+		TableContainer: ComponentType<any> | keyof React.JSX.IntrinsicElements
+		Table: ComponentType<any> | keyof React.JSX.IntrinsicElements
+		TableHead: ComponentType<any> | keyof React.JSX.IntrinsicElements
+		TableBody: ComponentType<any> | keyof React.JSX.IntrinsicElements
+		TableHeader: ComponentType<any> | keyof React.JSX.IntrinsicElements
+		TableRow: ComponentType<any> | keyof React.JSX.IntrinsicElements
+		TableCell: ComponentType<any> | keyof React.JSX.IntrinsicElements
 		Paginator: ComponentType<any>
 		PaginatorItem: ComponentType<any>
 	}
