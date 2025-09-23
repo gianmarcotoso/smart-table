@@ -37,6 +37,7 @@ export type TableHeaderProps<T> = {
 }
 
 export type TablePaginationOptions = PaginationOptions & {
+	alwaysShowPaginator?: boolean
 	containerClassName?: string
 	render?: (paginator: React.ReactNode) => React.ReactNode
 }
@@ -225,11 +226,35 @@ export function SmartTable<T extends Record<string, unknown>>({
 
 	const TableComponents = _config.components
 
-	const PaginatorComponent = (
-		<div className={paginationOptions?.containerClassName}>
-			<Paginator activePage={activePage} pageCount={pageCount} onSetActivePage={setActivePage} config={config} />
-		</div>
-	)
+	const PaginatorComponent = useMemo(() => {
+		const alwaysShowPaginator = paginationOptions?.alwaysShowPaginator ?? _config.pagination.alwaysShowPaginator
+		if (!alwaysShowPaginator && pageCount < 2) {
+			return null
+		}
+
+		if (_config.pagination.useCustomPagination) {
+			return (
+				<div className={paginationOptions?.containerClassName}>
+					<TableComponents.Paginator
+						activePage={activePage}
+						pageCount={pageCount}
+						onSetActivePage={setActivePage}
+					/>
+				</div>
+			)
+		}
+
+		return (
+			<div className={paginationOptions?.containerClassName}>
+				<Paginator
+					activePage={activePage}
+					pageCount={pageCount}
+					onSetActivePage={setActivePage}
+					config={config}
+				/>
+			</div>
+		)
+	}, [activePage, config, pageCount, paginationOptions, setActivePage])
 
 	return (
 		<TableComponents.TableContainer>

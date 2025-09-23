@@ -136,6 +136,7 @@ Unless pagination happens on the server, the Smart Table will paginate the `item
 -   `totalItems`: The total number of items, only required when paginating on the server to show the correct number of pages;
 -   `containerClassName`: A class name to be applied to the pagination container;
 -   `render`: A render prop that receives the paginator and allow you to customize how it's rendered;
+-   `alwaysShowPaginator`: If set to true, the paginator will be shown even if there's only one page (defaults to `false`);
 
 ````jsx
 <SmartTable
@@ -148,7 +149,8 @@ Unless pagination happens on the server, the Smart Table will paginate the `item
 		containerClassName: 'my-pagination-container',
 
 		// render allows you to customize how the Paginator is rendered
-		render: (Paginator) => <div className="my-paginator-wrapper">{Paginator}</div>
+		// Paginator is null if there's only one page and alwaysShowPaginator is false
+		render: (Paginator) => Paginator && <div className="my-paginator-wrapper">{Paginator}</div>
 	}}
 />
 ```
@@ -207,6 +209,7 @@ export const DefaultSmartTableConfig = {
 		},
 	},
 	pagination: {
+		alwaysShowPaginator: false,
 		showPaginatorAboveTable: false,
 		showPaginatorBelowTable: true,
 		maxPagesToShow: 5,

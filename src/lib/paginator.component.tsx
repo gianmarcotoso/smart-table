@@ -77,14 +77,6 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 		[onSetActivePage, pageCount],
 	)
 
-	if (_config.pagination.useCustomPagination) {
-		return <Components.Paginator activePage={activePage} pageCount={pageCount} onSetActivePage={onSetActivePage} />
-	}
-
-	if (pageCount < 2) {
-		return null
-	}
-
 	return (
 		<Components.Paginator>
 			<Components.PaginatorItem data-page={0} onClick={handleSetActivePage}>

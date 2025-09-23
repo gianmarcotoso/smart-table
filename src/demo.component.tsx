@@ -137,6 +137,9 @@ const items = [
 ]
 
 const config: DeepPartial<SmartTableConfig> = {
+	pagination: {
+		alwaysShowPaginator: true,
+	},
 	components: {},
 }
 
@@ -222,11 +225,16 @@ export function Demo() {
 						setPage(page)
 					}}
 					paginationOptions={{
-						pageSize: 5,
+						alwaysShowPaginator: false,
+						pageSize: 50,
 						activePage: page,
 						containerClassName: 'custom-pagination-container',
 						render(PaginatorComponent) {
-							return <div style={{ border: '1px solid black' }}>{PaginatorComponent}</div>
+							return (
+								PaginatorComponent && (
+									<div style={{ border: '1px solid black' }}>{PaginatorComponent}</div>
+								)
+							)
 						},
 					}}
 				/>

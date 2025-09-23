@@ -28,6 +28,7 @@ export type SmartTableConfig = {
 		}
 	}
 	pagination: {
+		alwaysShowPaginator: boolean
 		showPaginatorAboveTable: boolean
 		showPaginatorBelowTable: boolean
 		maxPagesToShow: number
@@ -64,6 +65,7 @@ export const DefaultSmartTableConfig: SmartTableConfig = {
 		},
 	},
 	pagination: {
+		alwaysShowPaginator: false,
 		showPaginatorAboveTable: false,
 		showPaginatorBelowTable: true,
 		maxPagesToShow: 5,
