@@ -137,6 +137,22 @@ Unless pagination happens on the server, the Smart Table will paginate the `item
 -   `containerClassName`: A class name to be applied to the pagination container;
 -   `render`: A render prop that receives the paginator and allow you to customize how it's rendered;
 
+````jsx
+<SmartTable
+	items={items}
+	columns={columns}
+	getItemKey={(item) => item.id}
+	paginationOptions={{
+		pageSize: 5,
+		// containerClassName is applied to the Paginator itself
+		containerClassName: 'my-pagination-container',
+
+		// render allows you to customize how the Paginator is rendered
+		render: (Paginator) => <div className="my-paginator-wrapper">{Paginator}</div>
+	}}
+/>
+```
+
 ### Configuration
 
 By default, the Smart Table uses default HTML `table` elements. If you are using a UI framework you might want to customize which component is used to render the table and all of its inner components. This can be done by using the `config` prop, which is an object with the following properties:
@@ -207,7 +223,7 @@ export const DefaultSmartTableConfig = {
 		},
 	},
 }
-```
+````
 
 Configuration can be applied either on a table-by-table basis by passing the `config` prop, or with with the `SmartTableConfigProvider`, which receives the same `config` object and makes it available to all tables within its scope.
 
