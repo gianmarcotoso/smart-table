@@ -16,6 +16,7 @@ export const useSort = <T>(items: T[], predicate: SortPredicate, direction: Sort
 
 	useEffect(() => {
 		if (!items || items.length === 0) {
+			setSortedItems([])
 			return
 		}
 

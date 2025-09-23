@@ -36,6 +36,11 @@ export type TableHeaderProps<T> = {
 	config?: DeepPartial<SmartTableConfig>
 }
 
+export type TablePaginationOptions = PaginationOptions & {
+	containerClassName?: string
+	render?: ({ children }: { children: React.ReactNode }) => React.ReactNode
+}
+
 export type TableProps<T> = {
 	columns: TableColumn<T>[]
 	items: T[]
@@ -49,7 +54,7 @@ export type TableProps<T> = {
 	sortProperties?: SortProperties<T>
 	defaultSortProperties?: SortProperties<T>
 	config?: DeepPartial<SmartTableConfig>
-	paginationOptions?: PaginationOptions
+	paginationOptions?: TablePaginationOptions
 	serverSideSorting?: boolean
 	onSortChange?: (sortProperty: SortProperties<T>) => void
 	onPageChange?: (page: number) => void
@@ -220,16 +225,16 @@ export function SmartTable<T extends Record<string, unknown>>({
 
 	const TableComponents = _config.components
 
+	const PaginatorComponent = (
+		<div className={paginationOptions?.containerClassName}>
+			<Paginator activePage={activePage} pageCount={pageCount} onSetActivePage={setActivePage} config={config} />
+		</div>
+	)
+
 	return (
 		<TableComponents.TableContainer>
-			{_config.pagination.showPaginatorAboveTable && (
-				<Paginator
-					activePage={activePage}
-					pageCount={pageCount}
-					onSetActivePage={setActivePage}
-					config={config}
-				/>
-			)}
+			{_config.pagination.showPaginatorAboveTable &&
+				(paginationOptions?.render?.({ children: PaginatorComponent }) ?? PaginatorComponent)}
 			<TableComponents.Table className={tableClassName}>
 				<TableComponents.TableHead>
 					<TableComponents.TableRow className={headerRowClassName}>
@@ -296,14 +301,8 @@ export function SmartTable<T extends Record<string, unknown>>({
 					})}
 				</TableComponents.TableBody>
 			</TableComponents.Table>
-			{_config.pagination.showPaginatorBelowTable && (
-				<Paginator
-					activePage={activePage}
-					pageCount={pageCount}
-					onSetActivePage={setActivePage}
-					config={config}
-				/>
-			)}
+			{_config.pagination.showPaginatorBelowTable &&
+				(paginationOptions?.render?.({ children: PaginatorComponent }) ?? PaginatorComponent)}
 		</TableComponents.TableContainer>
 	)
 }

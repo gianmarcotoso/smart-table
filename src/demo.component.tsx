@@ -149,6 +149,8 @@ const DemoSortPredicates = {
 }
 
 export function Demo() {
+	const [emptyTable, setEmptyTable] = useState(false)
+
 	const columns: TableColumn<Item>[] = [
 		{
 			key: 'id',
@@ -203,8 +205,13 @@ export function Demo() {
 		<SmartTableConfigProvider config={config}>
 			<div>
 				<h1>Smart Table</h1>
+
+				<button onClick={() => setEmptyTable((e) => !e)}>
+					Toggle Empty (Current: {emptyTable ? 'ON' : 'OFF'})
+				</button>
+
 				<SmartTable
-					items={items}
+					items={emptyTable ? [] : items}
 					columns={columns}
 					getItemKey={(item) => item.id}
 					sortProperties={sortProperties}
@@ -217,6 +224,10 @@ export function Demo() {
 					paginationOptions={{
 						pageSize: 5,
 						activePage: page,
+						containerClassName: 'custom-pagination-container',
+						render({ children }) {
+							return <div style={{ border: '1px solid black' }}>{children}</div>
+						},
 					}}
 				/>
 
