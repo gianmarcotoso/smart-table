@@ -26,6 +26,10 @@ export type TableHeaderProps<T> = {
     onSort: (property: SortPredicate) => void;
     config?: DeepPartial<SmartTableConfig>;
 };
+export type TablePaginationOptions = PaginationOptions & {
+    containerClassName?: string;
+    render?: (paginator: React.ReactNode) => React.ReactNode;
+};
 export type TableProps<T> = {
     columns: TableColumn<T>[];
     items: T[];
@@ -39,7 +43,7 @@ export type TableProps<T> = {
     sortProperties?: SortProperties<T>;
     defaultSortProperties?: SortProperties<T>;
     config?: DeepPartial<SmartTableConfig>;
-    paginationOptions?: PaginationOptions;
+    paginationOptions?: TablePaginationOptions;
     serverSideSorting?: boolean;
     onSortChange?: (sortProperty: SortProperties<T>) => void;
     onPageChange?: (page: number) => void;

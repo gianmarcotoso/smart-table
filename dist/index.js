@@ -198,6 +198,7 @@ const useSort = (items, predicate, direction) => {
   }, [direction]);
   useEffect(() => {
     if (!items || items.length === 0) {
+      setSortedItems([]);
       return;
     }
     if (typeof predicate === "function") {
@@ -343,16 +344,9 @@ function SmartTable({
   );
   const validColumns = columns.filter((c) => !!c);
   const TableComponents = _config.components;
+  const PaginatorComponent = /* @__PURE__ */ jsx("div", { className: paginationOptions?.containerClassName, children: /* @__PURE__ */ jsx(Paginator, { activePage, pageCount, onSetActivePage: setActivePage, config }) });
   return /* @__PURE__ */ jsxs(TableComponents.TableContainer, { children: [
-    _config.pagination.showPaginatorAboveTable && /* @__PURE__ */ jsx(
-      Paginator,
-      {
-        activePage,
-        pageCount,
-        onSetActivePage: setActivePage,
-        config
-      }
-    ),
+    _config.pagination.showPaginatorAboveTable && (paginationOptions?.render?.(PaginatorComponent) ?? PaginatorComponent),
     /* @__PURE__ */ jsxs(TableComponents.Table, { className: tableClassName, children: [
       /* @__PURE__ */ jsx(TableComponents.TableHead, { children: /* @__PURE__ */ jsx(TableComponents.TableRow, { className: headerRowClassName, children: validColumns.map((column) => {
         if (column.renderHeader) {
@@ -402,15 +396,7 @@ function SmartTable({
         );
       }) })
     ] }),
-    _config.pagination.showPaginatorBelowTable && /* @__PURE__ */ jsx(
-      Paginator,
-      {
-        activePage,
-        pageCount,
-        onSetActivePage: setActivePage,
-        config
-      }
-    )
+    _config.pagination.showPaginatorBelowTable && (paginationOptions?.render?.(PaginatorComponent) ?? PaginatorComponent)
   ] });
 }
 
