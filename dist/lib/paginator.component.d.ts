@@ -17,5 +17,5 @@ export type PaginatorProps = {
     children?: React.ReactNode;
 };
 export declare function DefaultPaginator({ children }: PaginatorProps): import("react/jsx-runtime").JSX.Element;
-export declare function Paginator({ activePage, pageCount, onSetActivePage, config }: PaginatorProps): import("react/jsx-runtime").JSX.Element | null;
+export declare function Paginator({ activePage, pageCount, onSetActivePage, config }: PaginatorProps): import("react/jsx-runtime").JSX.Element;
 export {};

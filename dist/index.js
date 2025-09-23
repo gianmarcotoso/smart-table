@@ -53,12 +53,6 @@ function Paginator({ activePage, pageCount, onSetActivePage, config }) {
     },
     [onSetActivePage, pageCount]
   );
-  if (_config.pagination.useCustomPagination) {
-    return /* @__PURE__ */ jsx(Components.Paginator, { activePage, pageCount, onSetActivePage });
-  }
-  if (pageCount < 2) {
-    return null;
-  }
   return /* @__PURE__ */ jsxs(Components.Paginator, { children: [
     /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": 0, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.FirstPage, {}) }),
     /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": activePage - 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.PreviousPage, {}) }),
@@ -115,6 +109,7 @@ const DefaultSmartTableConfig = {
     }
   },
   pagination: {
+    alwaysShowPaginator: false,
     showPaginatorAboveTable: false,
     showPaginatorBelowTable: true,
     maxPagesToShow: 5,
@@ -344,7 +339,31 @@ function SmartTable({
   );
   const validColumns = columns.filter((c) => !!c);
   const TableComponents = _config.components;
-  const PaginatorComponent = /* @__PURE__ */ jsx("div", { className: paginationOptions?.containerClassName, children: /* @__PURE__ */ jsx(Paginator, { activePage, pageCount, onSetActivePage: setActivePage, config }) });
+  const PaginatorComponent = useMemo(() => {
+    const alwaysShowPaginator = paginationOptions?.alwaysShowPaginator ?? _config.pagination.alwaysShowPaginator;
+    if (!alwaysShowPaginator && pageCount < 2) {
+      return null;
+    }
+    if (_config.pagination.useCustomPagination) {
+      return /* @__PURE__ */ jsx("div", { className: paginationOptions?.containerClassName, children: /* @__PURE__ */ jsx(
+        TableComponents.Paginator,
+        {
+          activePage,
+          pageCount,
+          onSetActivePage: setActivePage
+        }
+      ) });
+    }
+    return /* @__PURE__ */ jsx("div", { className: paginationOptions?.containerClassName, children: /* @__PURE__ */ jsx(
+      Paginator,
+      {
+        activePage,
+        pageCount,
+        onSetActivePage: setActivePage,
+        config
+      }
+    ) });
+  }, [activePage, config, pageCount, paginationOptions, setActivePage]);
   return /* @__PURE__ */ jsxs(TableComponents.TableContainer, { children: [
     _config.pagination.showPaginatorAboveTable && (paginationOptions?.render?.(PaginatorComponent) ?? PaginatorComponent),
     /* @__PURE__ */ jsxs(TableComponents.Table, { className: tableClassName, children: [

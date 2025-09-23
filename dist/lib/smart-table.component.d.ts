@@ -27,6 +27,7 @@ export type TableHeaderProps<T> = {
     config?: DeepPartial<SmartTableConfig>;
 };
 export type TablePaginationOptions = PaginationOptions & {
+    alwaysShowPaginator?: boolean;
     containerClassName?: string;
     render?: (paginator: React.ReactNode) => React.ReactNode;
 };

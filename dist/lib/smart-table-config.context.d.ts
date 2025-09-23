@@ -22,6 +22,7 @@ export type SmartTableConfig = {
         };
     };
     pagination: {
+        alwaysShowPaginator: boolean;
         showPaginatorAboveTable: boolean;
         showPaginatorBelowTable: boolean;
         maxPagesToShow: number;
