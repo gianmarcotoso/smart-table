@@ -134,6 +134,8 @@ Unless pagination happens on the server, the Smart Table will paginate the `item
 -   `pageSize`: The number of items per page, always required;
 -   `activePage`: The current page, if you want to control it from outside the component;
 -   `totalItems`: The total number of items, only required when paginating on the server to show the correct number of pages;
+-   `containerClassName`: A class name to be applied to the pagination container;
+-   `render`: A render prop that receives the paginator and allow you to customize how it's rendered;
 
 ### Configuration
 

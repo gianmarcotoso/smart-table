@@ -225,8 +225,8 @@ export function Demo() {
 						pageSize: 5,
 						activePage: page,
 						containerClassName: 'custom-pagination-container',
-						render({ children }) {
-							return <div style={{ border: '1px solid black' }}>{children}</div>
+						render(PaginatorComponent) {
+							return <div style={{ border: '1px solid black' }}>{PaginatorComponent}</div>
 						},
 					}}
 				/>

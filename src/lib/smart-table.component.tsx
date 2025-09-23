@@ -38,7 +38,7 @@ export type TableHeaderProps<T> = {
 
 export type TablePaginationOptions = PaginationOptions & {
 	containerClassName?: string
-	render?: ({ children }: { children: React.ReactNode }) => React.ReactNode
+	render?: (paginator: React.ReactNode) => React.ReactNode
 }
 
 export type TableProps<T> = {
@@ -234,7 +234,7 @@ export function SmartTable<T extends Record<string, unknown>>({
 	return (
 		<TableComponents.TableContainer>
 			{_config.pagination.showPaginatorAboveTable &&
-				(paginationOptions?.render?.({ children: PaginatorComponent }) ?? PaginatorComponent)}
+				(paginationOptions?.render?.(PaginatorComponent) ?? PaginatorComponent)}
 			<TableComponents.Table className={tableClassName}>
 				<TableComponents.TableHead>
 					<TableComponents.TableRow className={headerRowClassName}>
@@ -302,7 +302,7 @@ export function SmartTable<T extends Record<string, unknown>>({
 				</TableComponents.TableBody>
 			</TableComponents.Table>
 			{_config.pagination.showPaginatorBelowTable &&
-				(paginationOptions?.render?.({ children: PaginatorComponent }) ?? PaginatorComponent)}
+				(paginationOptions?.render?.(PaginatorComponent) ?? PaginatorComponent)}
 		</TableComponents.TableContainer>
 	)
 }
