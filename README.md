@@ -16,15 +16,15 @@ The `SmartTable` component renders a table of `items`, using user-specified `col
 
 Defining columns is as simple as defining an array of objects. Each object represents a column on the table, and have the following properties:
 
--   `key`: The key of the column. It can be a property of an object within the `items` array, or any other value of your choice;
--   `title`: The title of the column;
--   `getValue`: a function that receives the `item` for the row that is being rendered and returns what to render within the column. If `getValue` is not specified, the value of the `key` property will be used, if present;
--   `getSortProperty`: A sort _predicate_ that tells the component how to sort the column. The column will be sortable only if this value is present. Read more about sorting in the [sorting](#sorting) section below;
--   `width`: The fixed width of the column. If not specified, the column will be auto-sized;
--   `headerClassName`: A class name to be applied to the column header;
--   `cellClassName`: A class name to be applied to the column cells;
--   `renderHeader`: A function that receives the `column` object and returns what to render within the column header. If not specified, the `title` property will be used;
--   `value`: A value to be used as the column value, if you want to show static values within the column; if it's not specified and `getValue` is not specified either, the value of the `key` property will be used, if present;
+- `key`: The key of the column. It can be a property of an object within the `items` array, or any other value of your choice;
+- `title`: The title of the column;
+- `getValue`: a function that receives the `item` for the row that is being rendered and returns what to render within the column. If `getValue` is not specified, the value of the `key` property will be used, if present;
+- `getSortProperty`: A sort _predicate_ that tells the component how to sort the column. The column will be sortable only if this value is present. Read more about sorting in the [sorting](#sorting) section below;
+- `width`: The fixed width of the column. If not specified, the column will be auto-sized;
+- `headerClassName`: A class name to be applied to the column header;
+- `cellClassName`: A class name to be applied to the column cells;
+- `renderHeader`: A function that receives the `column` object and returns what to render within the column header. If not specified, the `title` property will be used;
+- `value`: A value to be used as the column value, if you want to show static values within the column; if it's not specified and `getValue` is not specified either, the value of the `key` property will be used, if present;
 
 ```jsx
 const items = [
@@ -51,22 +51,22 @@ When rendering a table, you need to specify the `items` that you want to render,
 
 The full list of props is:
 
--   `items`: The items to be rendered;
--   `columns`: The columns to be used;
--   `getItemKey`: A function that receives an `item` and returns a unique value for it;
--   `tableClassName`: A class name to be applied to the table;
--   `rowClassName`: A class name to be applied to the table rows;
--   `commonCellClassName`: A class name to be applied to all cells (excluding header cells);
--   `headerRowClassName`: A class name to be applied to the table header row;
--   `onRowClick`: A function that receives the `item` and is called when a row is clicked;
--   `parseDatasetValue`: When clicking on a row, it's item is found by using a data-attribute on the row itself; if this value was originally a number, it needs to be cast back to a number, and this function allows you how the key value should be parsed when reading it from a data-attribute (which is always a string);
--   `sortProperties`: An object containing the current `property` and `direction` for the table sort order, if you want to control it from outside the component;
--   `defaultSortProperties`: An object containing the default `property` and `direction` for the initial table sort order, if you want the table sort order to be uncontrolled;
--   `config`: An object containing configuration options for the table. Read more about it in the [configuration](#configuration) section below;
--   `paginationOptions`: An object containing pagination options for the table. Read more about it in the [pagination](#pagination) section below;
--   `serverSideSorting`: If specified and set to true, tells the Smart Table that both sorting and pagination will happen on the server;
--   `onSortChange`: A function that receives an object with the `property` and `direction` of the new sort order and is called when the user changes the sort order;
--   `onPageChange`: A function that receives the new page and is called when the user changes the page;
+- `items`: The items to be rendered;
+- `columns`: The columns to be used;
+- `getItemKey`: A function that receives an `item` and returns a unique value for it;
+- `tableClassName`: A class name to be applied to the table;
+- `rowClassName`: A class name to be applied to the table rows;
+- `commonCellClassName`: A class name to be applied to all cells (excluding header cells);
+- `headerRowClassName`: A class name to be applied to the table header row;
+- `onRowClick`: A function that receives the `item` and is called when a row is clicked;
+- `parseDatasetValue`: When clicking on a row, it's item is found by using a data-attribute on the row itself; if this value was originally a number, it needs to be cast back to a number, and this function allows you how the key value should be parsed when reading it from a data-attribute (which is always a string);
+- `sortProperties`: An object containing the current `property` and `direction` for the table sort order, if you want to control it from outside the component;
+- `defaultSortProperties`: An object containing the default `property` and `direction` for the initial table sort order, if you want the table sort order to be uncontrolled;
+- `config`: An object containing configuration options for the table. Read more about it in the [configuration](#configuration) section below;
+- `paginationOptions`: An object containing pagination options for the table. Read more about it in the [pagination](#pagination) section below;
+- `serverSideSorting`: If specified and set to true, tells the Smart Table that both sorting and pagination will happen on the server;
+- `onSortChange`: A function that receives an object with the `property` and `direction` of the new sort order and is called when the user changes the sort order;
+- `onPageChange`: A function that receives the new page and is called when the user changes the page;
 
 A more advanced example:
 
@@ -95,9 +95,9 @@ function MyTable() {
 
 Unless sorting happens on the server, the Smart Table will sort the items by using the `getSortProperty` property of a column. This property can be a string, an array of strings or a function.
 
--   If it's a string, it will be used as the property name of the item to be sorted;
--   If it's an array of strings, it will be used as a path to the property of the item to be sorted (in case of nested objects);
--   If it's a function, it will receive the `item` and return the value to be used for sorting (either a property or a computed value);
+- If it's a string, it will be used as the property name of the item to be sorted;
+- If it's an array of strings, it will be used as a path to the property of the item to be sorted (in case of nested objects);
+- If it's a function, it will receive the `item` and return the value to be used for sorting (either a property or a computed value);
 
 Avoid defining predicate functions inline when defining columns, as it will cause unexpected behavior. Define these functions outside of the component, or cache them with other means.
 
@@ -131,12 +131,12 @@ function MyTable() {
 
 Unless pagination happens on the server, the Smart Table will paginate the `items` automatically. The pagination options can be specified by using the `paginationOptions` prop, which is an object with the following properties:
 
--   `pageSize`: The number of items per page, always required;
--   `activePage`: The current page, if you want to control it from outside the component;
--   `totalItems`: The total number of items, only required when paginating on the server to show the correct number of pages;
--   `containerClassName`: A class name to be applied to the pagination container;
--   `render`: A render prop that receives the paginator and allow you to customize how it's rendered;
--   `alwaysShowPaginator`: If set to true, the paginator will be shown even if there's only one page (defaults to `false`);
+- `pageSize`: The number of items per page, always required;
+- `activePage`: The current page, if you want to control it from outside the component;
+- `totalItems`: The total number of items, only required when paginating on the server to show the correct number of pages;
+- `containerClassName`: A class name to be applied to the pagination container;
+- `render`: A render prop that receives the paginator and allow you to customize how it's rendered;
+- `alwaysShowPaginator`: If set to true, the paginator will be shown even if there's only one page (defaults to `false`);
 
 ````jsx
 <SmartTable
@@ -175,6 +175,9 @@ By default, the Smart Table uses default HTML `table` elements. If you are using
 -   `pagination`: Allows to specify additional options for pagination:
     -   `showPaginatorAboveTable`: If set to true, the paginator will be rendered above the table;
     -   `showPaginatorBelowTable`: If set to true, the paginator will be rendered below the table (defaults to `true`);
+	-	`showEllipsis`: If set to true, ellipsis will be shown in the paginator when there are more pages than the `maxPagesToShow` (defaults to `true`);
+	-	`showPaginationLimits`: If set to true, the first and last page buttons will be shown in the paginator (defaults to `true`);
+	-	`showPaginationNavigation`: If set to true, the previous and next page buttons will be shown in the paginator (defaults to `true`);
     -   `maxPagesToShow`: the maximum number of pages to show in the paginator (defaults to `5`);
     -   `activePageItemClassName`: A class name to be applied to the active page item;
     -   `useCustomPagination`: If set to `true` allows you to completely override the pagination logic and implement your own pagination components;

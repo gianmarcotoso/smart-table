@@ -31,6 +31,9 @@ export type SmartTableConfig = {
 		alwaysShowPaginator: boolean
 		showPaginatorAboveTable: boolean
 		showPaginatorBelowTable: boolean
+		showEllipsis: boolean
+		showPaginationLimits: boolean
+		showPaginationNavigation: boolean
 		maxPagesToShow: number
 		activePageItemClassName: string
 		useCustomPagination: boolean
@@ -69,6 +72,9 @@ export const DefaultSmartTableConfig: SmartTableConfig = {
 		showPaginatorAboveTable: false,
 		showPaginatorBelowTable: true,
 		maxPagesToShow: 5,
+		showEllipsis: true,
+		showPaginationLimits: true,
+		showPaginationNavigation: true,
 		activePageItemClassName: 'active-page-item',
 		useCustomPagination: false,
 		paginatorClassName: 'paginator',

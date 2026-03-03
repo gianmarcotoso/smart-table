@@ -38,6 +38,7 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 	const _config = useConfig(config)
 	const Components = _config.components
 	const Glyphs = _config.pagination.glyphs
+	const { showEllipsis, showPaginationLimits, showPaginationNavigation } = _config.pagination
 
 	const shownPages = useMemo(() => {
 		return pageCount > _config.pagination.maxPagesToShow ? _config.pagination.maxPagesToShow : pageCount
@@ -79,13 +80,17 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 
 	return (
 		<Components.Paginator>
-			<Components.PaginatorItem data-page={0} onClick={handleSetActivePage}>
-				<Glyphs.FirstPage />
-			</Components.PaginatorItem>
-			<Components.PaginatorItem data-page={activePage - 1} onClick={handleSetActivePage}>
-				<Glyphs.PreviousPage />
-			</Components.PaginatorItem>
-			{threshold + activePage >= _config.pagination.maxPagesToShow && (
+			{showPaginationLimits && (
+				<Components.PaginatorItem data-page={0} onClick={handleSetActivePage}>
+					<Glyphs.FirstPage />
+				</Components.PaginatorItem>
+			)}
+			{showPaginationNavigation && (
+				<Components.PaginatorItem data-page={activePage - 1} onClick={handleSetActivePage}>
+					<Glyphs.PreviousPage />
+				</Components.PaginatorItem>
+			)}
+			{showEllipsis && threshold + activePage >= _config.pagination.maxPagesToShow && (
 				<Components.PaginatorItem
 					data-page={activePage - _config.pagination.maxPagesToShow}
 					onClick={handleSetActivePage}
@@ -106,7 +111,7 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 					</Components.PaginatorItem>
 				)
 			})}
-			{threshold + _config.pagination.maxPagesToShow < pageCount && (
+			{showEllipsis && threshold + _config.pagination.maxPagesToShow < pageCount && (
 				<Components.PaginatorItem
 					data-page={activePage + _config.pagination.maxPagesToShow}
 					onClick={handleSetActivePage}
@@ -114,12 +119,16 @@ export function Paginator({ activePage, pageCount, onSetActivePage, config }: Pa
 					<Glyphs.Ellipsis />
 				</Components.PaginatorItem>
 			)}
-			<Components.PaginatorItem data-page={activePage + 1} onClick={handleSetActivePage}>
-				<Glyphs.NextPage />
-			</Components.PaginatorItem>
-			<Components.PaginatorItem data-page={pageCount - 1} onClick={handleSetActivePage}>
-				<Glyphs.LastPage />
-			</Components.PaginatorItem>
+			{showPaginationNavigation && (
+				<Components.PaginatorItem data-page={activePage + 1} onClick={handleSetActivePage}>
+					<Glyphs.NextPage />
+				</Components.PaginatorItem>
+			)}
+			{showPaginationLimits && (
+				<Components.PaginatorItem data-page={pageCount - 1} onClick={handleSetActivePage}>
+					<Glyphs.LastPage />
+				</Components.PaginatorItem>
+			)}
 		</Components.Paginator>
 	)
 }
