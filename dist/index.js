@@ -27,6 +27,7 @@ function Paginator({ activePage, pageCount, onSetActivePage, config }) {
   const _config = useConfig(config);
   const Components = _config.components;
   const Glyphs = _config.pagination.glyphs;
+  const { showEllipsis, showPaginationLimits, showPaginationNavigation } = _config.pagination;
   const shownPages = useMemo(() => {
     return pageCount > _config.pagination.maxPagesToShow ? _config.pagination.maxPagesToShow : pageCount;
   }, [_config.pagination.maxPagesToShow, pageCount]);
@@ -54,9 +55,9 @@ function Paginator({ activePage, pageCount, onSetActivePage, config }) {
     [onSetActivePage, pageCount]
   );
   return /* @__PURE__ */ jsxs(Components.Paginator, { children: [
-    /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": 0, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.FirstPage, {}) }),
-    /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": activePage - 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.PreviousPage, {}) }),
-    threshold + activePage >= _config.pagination.maxPagesToShow && /* @__PURE__ */ jsx(
+    showPaginationLimits && /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": 0, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.FirstPage, {}) }),
+    showPaginationNavigation && /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": activePage - 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.PreviousPage, {}) }),
+    showEllipsis && threshold + activePage >= _config.pagination.maxPagesToShow && /* @__PURE__ */ jsx(
       Components.PaginatorItem,
       {
         "data-page": activePage - _config.pagination.maxPagesToShow,
@@ -77,7 +78,7 @@ function Paginator({ activePage, pageCount, onSetActivePage, config }) {
         i + threshold
       );
     }),
-    threshold + _config.pagination.maxPagesToShow < pageCount && /* @__PURE__ */ jsx(
+    showEllipsis && threshold + _config.pagination.maxPagesToShow < pageCount && /* @__PURE__ */ jsx(
       Components.PaginatorItem,
       {
         "data-page": activePage + _config.pagination.maxPagesToShow,
@@ -85,8 +86,8 @@ function Paginator({ activePage, pageCount, onSetActivePage, config }) {
         children: /* @__PURE__ */ jsx(Glyphs.Ellipsis, {})
       }
     ),
-    /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": activePage + 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.NextPage, {}) }),
-    /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": pageCount - 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.LastPage, {}) })
+    showPaginationNavigation && /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": activePage + 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.NextPage, {}) }),
+    showPaginationLimits && /* @__PURE__ */ jsx(Components.PaginatorItem, { "data-page": pageCount - 1, onClick: handleSetActivePage, children: /* @__PURE__ */ jsx(Glyphs.LastPage, {}) })
   ] });
 }
 
@@ -113,6 +114,9 @@ const DefaultSmartTableConfig = {
     showPaginatorAboveTable: false,
     showPaginatorBelowTable: true,
     maxPagesToShow: 5,
+    showEllipsis: true,
+    showPaginationLimits: true,
+    showPaginationNavigation: true,
     activePageItemClassName: "active-page-item",
     useCustomPagination: false,
     paginatorClassName: "paginator",

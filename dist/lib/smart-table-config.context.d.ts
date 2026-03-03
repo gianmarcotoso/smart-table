@@ -25,6 +25,9 @@ export type SmartTableConfig = {
         alwaysShowPaginator: boolean;
         showPaginatorAboveTable: boolean;
         showPaginatorBelowTable: boolean;
+        showEllipsis: boolean;
+        showPaginationLimits: boolean;
+        showPaginationNavigation: boolean;
         maxPagesToShow: number;
         activePageItemClassName: string;
         useCustomPagination: boolean;
